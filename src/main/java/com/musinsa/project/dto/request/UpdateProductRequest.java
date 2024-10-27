@@ -2,11 +2,15 @@ package com.musinsa.project.dto.request;
 
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class UpdateProductRequest {
 
-    private final BigDecimal price;
+    private BigDecimal price;
 }

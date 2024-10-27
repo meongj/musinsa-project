@@ -3,12 +3,16 @@ package com.musinsa.project.dto.request;
 import com.musinsa.project.domain.Category;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class CreateProductRequest {
 
-    private final Category category;
-    private final BigDecimal price;
+    private Category category;
+    private BigDecimal price;
 }

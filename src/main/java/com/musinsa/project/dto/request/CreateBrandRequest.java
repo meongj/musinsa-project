@@ -1,11 +1,15 @@
 package com.musinsa.project.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class CreateBrandRequest {
 
-    private final String name;
+    private String name;
 }

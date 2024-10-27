@@ -37,6 +37,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.h2database:h2")
     testImplementation("org.assertj:assertj-core:3.24.2")
+
+    testFixturesImplementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    testFixturesImplementation("org.projectlombok:lombok")
+    testFixturesAnnotationProcessor("org.projectlombok:lombok")
 }
 
 tasks.withType<Test> {

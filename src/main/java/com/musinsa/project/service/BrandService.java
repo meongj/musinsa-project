@@ -3,6 +3,7 @@ package com.musinsa.project.service;
 import com.musinsa.project.domain.Category;
 import com.musinsa.project.dto.BrandPriceDto;
 import com.musinsa.project.dto.CategoryPriceDto;
+import com.musinsa.project.dto.CategoryPriceRangeDto;
 import java.util.Map;
 
 public interface BrandService {
@@ -11,4 +12,7 @@ public interface BrandService {
 
     //단일 브랜드로 전체 카테고리 상품을 구매할 때 최저가격 브랜드 조회
     BrandPriceDto findLowestTotalPriceBrand();
+
+    // 특정 카테고리의 최저/최고가 브랜드 조회
+    CategoryPriceRangeDto findPriceRangeByCategory(Category category);
 }

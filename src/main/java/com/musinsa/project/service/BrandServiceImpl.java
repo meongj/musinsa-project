@@ -5,6 +5,7 @@ import com.musinsa.project.domain.Category;
 import com.musinsa.project.domain.Product;
 import com.musinsa.project.dto.BrandPriceDto;
 import com.musinsa.project.dto.CategoryPriceDto;
+import com.musinsa.project.dto.CategoryPriceRangeDto;
 import com.musinsa.project.exception.BusinessException;
 import com.musinsa.project.exception.ErrorCode;
 import com.musinsa.project.repository.BrandRepository;
@@ -111,5 +112,39 @@ public class BrandServiceImpl implements BrandService {
             .orElseThrow(() ->
                 new BusinessException(ErrorCode.PRODUCT_NOT_FOUND)
             );
+    }
+
+    @Override
+    public CategoryPriceRangeDto findPriceRangeByCategory(Category category) {
+        List<Brand> brands = brandRepository.findBrandsWithAllCategories(
+            Category.values().length
+        );
+
+        List<CategoryPriceDto> categoryPrices = brands
+            .stream()
+            .map(brand ->
+                new CategoryPriceDto(
+                    brand.getName(),
+                    findProductPrice(brand, category),
+                    category
+                )
+            )
+            .collect(Collectors.toList());
+
+        CategoryPriceDto lowestPrice = categoryPrices
+            .stream()
+            .min(Comparator.comparing(CategoryPriceDto::getPrice))
+            .orElseThrow(() ->
+                new BusinessException(ErrorCode.PRODUCT_NOT_FOUND)
+            );
+
+        CategoryPriceDto highestPrice = categoryPrices
+            .stream()
+            .max(Comparator.comparing(CategoryPriceDto::getPrice))
+            .orElseThrow(() ->
+                new BusinessException(ErrorCode.PRODUCT_NOT_FOUND)
+            );
+
+        return new CategoryPriceRangeDto(category, lowestPrice, highestPrice);
     }
 }

@@ -10,7 +10,10 @@ public enum ErrorCode {
 
     // 상품 관련 에러
     PRODUCT_NOT_FOUND("P001", "상품을 찾을 수 없습니다"),
-    INVALID_PRODUCT_PRICE("P002", "상품 가격이 유효하지 않습니다");
+    INVALID_PRODUCT_PRICE("P002", "상품 가격이 유효하지 않습니다"),
+
+    // 클라이언트 예외
+    INVALID_PARAMETER("C001", "잘못된 파라미터입니다");
 
     private final String code;
     private final String message;

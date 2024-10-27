@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.musinsa.project.domain.Brand;
 import com.musinsa.project.domain.Category;
-import com.musinsa.project.domain.Product;
 import com.musinsa.project.fixtures.BrandFixtures;
-import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +37,7 @@ class BrandRepositoryTest {
     @Test
     void shouldNotFindBrandWithMissingCategories() {
         // given
-        Brand brand = new Brand("미완성브랜드");
-        // TOP 카테고리 상품만 추가
-        brand.addProduct(
-            new Product(brand, Category.TOP, BigDecimal.valueOf(10000))
-        );
+        Brand brand = BrandFixtures.createBrandWithMissingCategories();
         brandRepository.save(brand);
 
         // when

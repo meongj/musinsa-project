@@ -29,4 +29,18 @@ public class BrandFixtures {
         );
         return brand;
     }
+
+    public static Brand createBrandWithSpecificPrice(
+        String name,
+        BigDecimal price
+    ) {
+        Brand brand = new Brand(name);
+
+        for (Category category : Category.values()) {
+            Product product = new Product(brand, category, price);
+            brand.addProduct(product);
+        }
+
+        return brand;
+    }
 }

@@ -1,23 +1,36 @@
 package com.musinsa.project.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.musinsa.project.domain.Brand;
 import com.musinsa.project.domain.Category;
+import com.musinsa.project.domain.Product;
 import com.musinsa.project.dto.BrandPriceDto;
 import com.musinsa.project.dto.CategoryPriceDto;
 import com.musinsa.project.dto.CategoryPriceRangeDto;
+import com.musinsa.project.dto.request.BrandResponse;
+import com.musinsa.project.dto.request.CreateBrandRequest;
+import com.musinsa.project.dto.request.CreateProductRequest;
+import com.musinsa.project.dto.request.ProductResponse;
+import com.musinsa.project.dto.request.UpdateProductRequest;
+import com.musinsa.project.exception.BusinessException;
+import com.musinsa.project.exception.ErrorCode;
 import com.musinsa.project.fixtures.BrandFixtures;
 import com.musinsa.project.repository.BrandRepository;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class BrandServiceTest {
@@ -139,5 +152,142 @@ class BrandServiceTest {
         assertThat(result.getHighestPrice().getPrice()).isEqualByComparingTo(
             BigDecimal.valueOf(12000)
         );
+    }
+
+    @Test
+    void shouldCreateBrand() {
+        // given
+        CreateBrandRequest request = new CreateBrandRequest("테스트브랜드");
+        Brand brand = new Brand(request.getName());
+        when(brandRepository.save(any(Brand.class))).thenReturn(brand);
+
+        // when
+        BrandResponse response = brandService.createBrand(request);
+
+        // then
+        assertThat(response.getName()).isEqualTo("테스트브랜드");
+        verify(brandRepository).save(any(Brand.class));
+    }
+
+    @Test
+    void shouldAddProductToBrand() {
+        // given
+        Long brandId = 1L;
+        CreateProductRequest request = new CreateProductRequest(
+            Category.TOP,
+            BigDecimal.valueOf(10000)
+        );
+
+        Brand brand = new Brand("테스트브랜드");
+        when(brandRepository.findById(brandId)).thenReturn(Optional.of(brand));
+        when(brandRepository.save(any(Brand.class))).thenReturn(brand);
+
+        // when
+        ProductResponse response = brandService.addProduct(brandId, request);
+
+        // then
+        assertThat(response.getCategory()).isEqualTo(Category.TOP);
+        assertThat(response.getPrice()).isEqualByComparingTo(
+            BigDecimal.valueOf(10000)
+        );
+        verify(brandRepository).save(any(Brand.class));
+    }
+
+    @Test
+    void shouldUpdateProduct() {
+        // given
+        Long brandId = 1L;
+        Long productId = 1L;
+        UpdateProductRequest request = new UpdateProductRequest(
+            BigDecimal.valueOf(20000)
+        );
+
+        Brand brand = new Brand("테스트브랜드");
+        Product product = new Product(
+            brand,
+            Category.TOP,
+            BigDecimal.valueOf(10000)
+        );
+        ReflectionTestUtils.setField(product, "id", productId); // ID 설정
+
+        brand.addProduct(product);
+        when(brandRepository.findById(brandId)).thenReturn(Optional.of(brand));
+
+        // when
+        ProductResponse response = brandService.updateProduct(
+            brandId,
+            productId,
+            request
+        );
+
+        // then
+        assertThat(response.getPrice()).isEqualByComparingTo(
+            BigDecimal.valueOf(20000)
+        );
+        verify(brandRepository).save(any(Brand.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingNonExistentProduct() {
+        // given
+        Long brandId = 1L;
+        Long nonExistentProductId = 999L;
+        UpdateProductRequest request = new UpdateProductRequest(
+            BigDecimal.valueOf(20000)
+        );
+
+        Brand brand = new Brand("테스트브랜드");
+        when(brandRepository.findById(brandId)).thenReturn(Optional.of(brand));
+
+        // when & then
+        assertThatThrownBy(() ->
+            brandService.updateProduct(brandId, nonExistentProductId, request)
+        )
+            .isInstanceOf(BusinessException.class)
+            .hasMessage(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void shouldDeleteProduct() {
+        // given
+        Long brandId = 1L;
+        Long productId = 1L;
+
+        Brand brand = new Brand("테스트브랜드");
+        Product product = new Product(
+            brand,
+            Category.TOP,
+            BigDecimal.valueOf(10000)
+        );
+
+        // Product가 DB에 저장되었다고 가정하고 ID 설정
+        ReflectionTestUtils.setField(product, "id", productId);
+
+        brand.addProduct(product);
+        when(brandRepository.findById(brandId)).thenReturn(Optional.of(brand));
+
+        // when
+        brandService.deleteProduct(brandId, productId);
+
+        // then
+        verify(brandRepository).save(any(Brand.class));
+        assertThat(brand.getProducts()).isEmpty();
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDeletingNonExistentProduct() {
+        // given
+        Long brandId = 1L;
+        Long nonExistentProductId = 999L;
+
+        Brand brand = new Brand("테스트브랜드");
+        when(brandRepository.findById(brandId)).thenReturn(Optional.of(brand));
+
+        // when & then
+        assertThatThrownBy(() ->
+            brandService.deleteProduct(brandId, nonExistentProductId)
+        )
+            .isInstanceOf(BusinessException.class)
+            .hasMessage(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
     }
 }

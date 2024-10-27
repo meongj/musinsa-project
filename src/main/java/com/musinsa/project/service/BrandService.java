@@ -4,11 +4,11 @@ import com.musinsa.project.domain.Category;
 import com.musinsa.project.dto.BrandPriceDto;
 import com.musinsa.project.dto.CategoryPriceDto;
 import com.musinsa.project.dto.CategoryPriceRangeDto;
-import com.musinsa.project.dto.request.BrandResponse;
 import com.musinsa.project.dto.request.CreateBrandRequest;
 import com.musinsa.project.dto.request.CreateProductRequest;
-import com.musinsa.project.dto.request.ProductResponse;
 import com.musinsa.project.dto.request.UpdateProductRequest;
+import com.musinsa.project.dto.response.BrandResponse;
+import com.musinsa.project.dto.response.ProductResponse;
 import java.util.Map;
 
 public interface BrandService {

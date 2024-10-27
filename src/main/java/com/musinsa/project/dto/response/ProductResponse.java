@@ -1,4 +1,4 @@
-package com.musinsa.project.dto.request;
+package com.musinsa.project.dto.response;
 
 import com.musinsa.project.domain.Category;
 import com.musinsa.project.domain.Product;

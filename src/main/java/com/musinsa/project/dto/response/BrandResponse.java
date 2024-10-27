@@ -1,4 +1,4 @@
-package com.musinsa.project.dto.request;
+package com.musinsa.project.dto.response;
 
 import com.musinsa.project.domain.Brand;
 import lombok.Getter;

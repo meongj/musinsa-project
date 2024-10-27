@@ -39,4 +39,9 @@ public class Product {
             throw new IllegalArgumentException("가격은 0보다 커야 합니다");
         }
     }
+
+    public void updatePrice(BigDecimal price) {
+        validatePrice(price);
+        this.price = price;
+    }
 }

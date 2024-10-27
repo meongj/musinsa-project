@@ -4,6 +4,11 @@ import com.musinsa.project.domain.Category;
 import com.musinsa.project.dto.BrandPriceDto;
 import com.musinsa.project.dto.CategoryPriceDto;
 import com.musinsa.project.dto.CategoryPriceRangeDto;
+import com.musinsa.project.dto.request.BrandResponse;
+import com.musinsa.project.dto.request.CreateBrandRequest;
+import com.musinsa.project.dto.request.CreateProductRequest;
+import com.musinsa.project.dto.request.ProductResponse;
+import com.musinsa.project.dto.request.UpdateProductRequest;
 import java.util.Map;
 
 public interface BrandService {
@@ -15,4 +20,13 @@ public interface BrandService {
 
     // 특정 카테고리의 최저/최고가 브랜드 조회
     CategoryPriceRangeDto findPriceRangeByCategory(Category category);
+
+    BrandResponse createBrand(CreateBrandRequest request);
+    ProductResponse addProduct(Long brandId, CreateProductRequest request);
+    ProductResponse updateProduct(
+        Long brandId,
+        Long productId,
+        UpdateProductRequest request
+    );
+    void deleteProduct(Long brandId, Long productId);
 }

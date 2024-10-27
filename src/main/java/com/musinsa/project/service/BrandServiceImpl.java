@@ -6,6 +6,11 @@ import com.musinsa.project.domain.Product;
 import com.musinsa.project.dto.BrandPriceDto;
 import com.musinsa.project.dto.CategoryPriceDto;
 import com.musinsa.project.dto.CategoryPriceRangeDto;
+import com.musinsa.project.dto.request.BrandResponse;
+import com.musinsa.project.dto.request.CreateBrandRequest;
+import com.musinsa.project.dto.request.CreateProductRequest;
+import com.musinsa.project.dto.request.ProductResponse;
+import com.musinsa.project.dto.request.UpdateProductRequest;
 import com.musinsa.project.exception.BusinessException;
 import com.musinsa.project.exception.ErrorCode;
 import com.musinsa.project.repository.BrandRepository;
@@ -146,5 +151,66 @@ public class BrandServiceImpl implements BrandService {
             );
 
         return new CategoryPriceRangeDto(category, lowestPrice, highestPrice);
+    }
+
+    @Transactional
+    @Override
+    public BrandResponse createBrand(CreateBrandRequest request) {
+        Brand brand = new Brand(request.getName());
+        Brand savedBrand = brandRepository.save(brand);
+        return new BrandResponse(savedBrand);
+    }
+
+    @Transactional
+    @Override
+    public ProductResponse addProduct(
+        Long brandId,
+        CreateProductRequest request
+    ) {
+        Brand brand = brandRepository
+            .findById(brandId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.BRAND_NOT_FOUND)
+            );
+
+        Product product = new Product(
+            brand,
+            request.getCategory(),
+            request.getPrice()
+        );
+        brand.addProduct(product);
+
+        brandRepository.save(brand);
+        return new ProductResponse(product);
+    }
+
+    @Transactional
+    @Override
+    public ProductResponse updateProduct(
+        Long brandId,
+        Long productId,
+        UpdateProductRequest request
+    ) {
+        Brand brand = brandRepository
+            .findById(brandId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.BRAND_NOT_FOUND)
+            );
+
+        Product product = brand.findProduct(productId);
+        product.updatePrice(request.getPrice());
+
+        brandRepository.save(brand);
+        return new ProductResponse(product);
+    }
+
+    @Transactional
+    @Override
+    public void deleteProduct(Long brandId, Long productId) {
+        Brand brand = brandRepository
+            .findById(brandId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.BRAND_NOT_FOUND)
+            );
+
+        brand.removeProduct(productId);
+        brandRepository.save(brand);
     }
 }

@@ -7,6 +7,7 @@ import com.musinsa.project.domain.Brand;
 import com.musinsa.project.domain.Category;
 import com.musinsa.project.dto.BrandPriceDto;
 import com.musinsa.project.dto.CategoryPriceDto;
+import com.musinsa.project.dto.CategoryPriceRangeDto;
 import com.musinsa.project.fixtures.BrandFixtures;
 import com.musinsa.project.repository.BrandRepository;
 import java.math.BigDecimal;
@@ -97,5 +98,46 @@ class BrandServiceTest {
                     BigDecimal.valueOf(9000)
                 )
             );
+    }
+
+    @Test
+    void shouldFindPriceRangeByCategory() {
+        // given
+        Brand brandA = BrandFixtures.createBrandWithSpecificPrice(
+            "A",
+            BigDecimal.valueOf(10000)
+        );
+        Brand brandB = BrandFixtures.createBrandWithSpecificPrice(
+            "B",
+            BigDecimal.valueOf(8000)
+        );
+        Brand brandC = BrandFixtures.createBrandWithSpecificPrice(
+            "C",
+            BigDecimal.valueOf(12000)
+        );
+
+        when(
+            brandRepository.findBrandsWithAllCategories(
+                Category.values().length
+            )
+        ).thenReturn(Arrays.asList(brandA, brandB, brandC));
+
+        // when
+        CategoryPriceRangeDto result = brandService.findPriceRangeByCategory(
+            Category.TOP
+        );
+
+        // then
+        assertThat(result.getCategory()).isEqualTo(Category.TOP);
+
+        assertThat(result.getLowestPrice().getBrandName()).isEqualTo("B");
+        assertThat(result.getLowestPrice().getPrice()).isEqualByComparingTo(
+            BigDecimal.valueOf(8000)
+        );
+
+        assertThat(result.getHighestPrice().getBrandName()).isEqualTo("C");
+        assertThat(result.getHighestPrice().getPrice()).isEqualByComparingTo(
+            BigDecimal.valueOf(12000)
+        );
     }
 }

@@ -3,6 +3,7 @@ package com.musinsa.project.domain;
 import com.musinsa.project.exception.BusinessException;
 import com.musinsa.project.exception.ErrorCode;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,5 +56,21 @@ public class Brand {
             );
 
         products.remove(productToRemove);
+    }
+
+    public BigDecimal getProductPrice(Category category) {
+        return this.products.stream()
+            .filter(p -> p.getCategory() == category)
+            .findFirst()
+            .map(Product::getPrice)
+            .orElse(BigDecimal.ZERO); // 또는 null을 반환하고 템플릿에서 처리
+    }
+
+    public Product findProductByCategory(Category category) {
+        return products
+            .stream()
+            .filter(p -> p.getCategory() == category)
+            .findFirst()
+            .orElse(null);
     }
 }

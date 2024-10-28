@@ -2,7 +2,15 @@
 
 ## 프로젝트 개요
 
-8개의 카테고리에서 최저가격 브랜드를 조회하고 관리하는 서비스입니다.
+이 프로젝트는 Spring Boot를 기반으로 만들어진 8개의 상품 카테고리에서 최저가격 브랜드를 조회하고 관리하는 서비스입니다.
+
+
+## 기술 스택
+- Java 21
+- Spring boot(3.3.5), JPA, H2
+- Junit, Mockito
+- bootstrap, thymeleaf
+
 
 ## 주요 기능
 
@@ -17,9 +25,18 @@
 
 - Java 21
 
-### Run
+### Project Clone
+```bash
+git clone https://github.com/meongj/musinsa-project.git
+cd project
+```
+
+### Build & Run
 
 ```bash
+# 빌드
+./gradlew clean build
+
 # 전체 테스트 실행
 ./gradlew test
 
@@ -68,6 +85,3 @@
 - 관리자 페이지: 브랜드와 상품 관리
 - API Documentation by Swagger
 
-## TODO
-
-- [ ] 디테일한 예외 처리

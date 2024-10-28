@@ -24,7 +24,11 @@ public class Brand {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    @OneToMany(
+        mappedBy = "brand",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
     private List<Product> products = new ArrayList<>();
 
     public Brand(String name) {

@@ -10,6 +10,7 @@
 - Spring boot(3.3.5), JPA, H2
 - Junit, Mockito
 - bootstrap, thymeleaf
+- gradle
 
 
 ## 주요 기능

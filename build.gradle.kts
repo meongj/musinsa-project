@@ -35,6 +35,7 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     runtimeOnly("com.h2database:h2")
     testImplementation("org.assertj:assertj-core:3.24.2")
 
